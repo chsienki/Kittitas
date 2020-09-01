@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30316.234
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kittitas", "Kittitas.csproj", "{2D19BCF1-192A-42FE-A6F9-600099E7CDF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kittitas", "Kittitas\Kittitas.csproj", "{2D19BCF1-192A-42FE-A6F9-600099E7CDF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
