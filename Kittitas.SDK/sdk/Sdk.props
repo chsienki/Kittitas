@@ -1,0 +1,19 @@
+<Project>
+  <Import Project="Sdk.props" Sdk="Microsoft.Build.NoTargets" Version="2.0.1" />
+  
+  <PropertyGroup>
+    <!-- Default to netcore -->
+    <TargetFramework>net5.0</TargetFramework>
+
+    <!-- Dont include any default items -->
+    <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
+    <EnableDefaultItems>false</EnableDefaultItems>
+  
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Default place to write the launch settings file -->
+    <LaunchSettingsJsonFile Include="Properties\launchSettings.json" />
+  </ItemGroup>
+  
+</Project>

@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.Build.NoTargets/2.0.1">
+ 
+  <PropertyGroup>
+    <Description>Provides targets to create a project that launches Kittitas</Description>
+    <PackageTags>MSBuild MSBuildSdk $(PackageTags)</PackageTags>
+    <PackageType>MSBuildSdk</PackageType>
+  </PropertyGroup>
+ 
+  <ItemGroup>
+    <None Include="sdk\**" Pack="true" PackagePath="Sdk\" />
+  </ItemGroup>
+  
+</Project>

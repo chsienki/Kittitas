@@ -1,0 +1,50 @@
+<Project>
+  <Import Project="Sdk.targets" Sdk="Microsoft.Build.NoTargets" Version="2.0.1" />
+
+  <!-- Override the build + restore targets to just write the launch settings file -->
+  <Target Name="Build" DependsOnTargets="Restore" />
+  <Target Name="Restore" DependsOnTargets="WriteLaunchSettingsFile" />
+
+  <Target Name="Clean">
+    <Delete Files="@(LaunchSettingsJsonFile)" />
+  </Target>
+
+  <Target Name="WriteLaunchSettingsFile">
+
+    <!-- Error if not exactly one project -->
+    <Error Condition="'@(ProjectReference-&gt;Count())' != '1'" Text="Add a single project reference to this project, which is what will be debugged whilst being built." />
+
+    <!-- Don't overwrite an existing launch settings if we didn't create it -->
+    <ReadLinesFromFile File="@(LaunchSettingsJsonFile)" >
+      <Output TaskParameter="Lines" ItemName="_ExistingLaunchSettingsValue"/>
+    </ReadLinesFromFile>
+
+    <CreateProperty Value="true"
+                    Condition="'%(_ExistingLaunchSettingsValue.Identity)' == 'kittitas'">
+      <Output TaskParameter="Value" PropertyName="_IsKittitasLaunchFile" />
+    </CreateProperty>
+
+    <PropertyGroup>
+      <_CanRunGeneration Condition="!Exists('@(LaunchSettingsJsonFile)') or '$(_IsKittitasLaunchFile)' == 'true'">true</_CanRunGeneration>
+    </PropertyGroup>
+
+    <Warning Condition="'$(_CanRunGeneration)' != 'true'" Text="File '@(LaunchSettingsJsonFile)' already exists, and does not appear to be a Kittitas generated file. No launch settings will be created." ></Warning>
+
+    <!-- Write the launch settings file -->
+    <PropertyGroup>
+      <ProjectFileToDebug>@(ProjectReference->'%(FullPath)'->Replace('\', '\\'))</ProjectFileToDebug>
+      <LaunchSettingsFile>
+        {
+        "profiles": {
+        "DebugRolsynComponent": {
+        "commandName": "Executable",
+        "executablePath": "dotnet-kittitas",
+        "commandLineArgs": "$(ProjectFileToDebug)"
+        }
+        }
+        }
+      </LaunchSettingsFile>
+    </PropertyGroup>
+    <WriteLinesToFile Condition="'($_CanRunGeneration)' == 'true'" File="@(LaunchSettingsJsonFile)" Lines="$(LaunchSettingsFile)" Overwrite="true" />
+  </Target>
+</Project>

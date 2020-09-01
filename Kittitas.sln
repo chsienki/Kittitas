@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30316.234
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kittitas", "Kittitas\Kittitas.csproj", "{2D19BCF1-192A-42FE-A6F9-600099E7CDF3}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kittitas.SDK", "Kittitas.SDK\Kittitas.SDK.csproj", "{0B9AEBFD-22E3-4E7D-BC36-A07AB9AF7A6A}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{31CF5AA0-CE4D-423B-BE6B-3D841FD3EFCC}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
@@ -21,6 +23,10 @@ Global
 		{2D19BCF1-192A-42FE-A6F9-600099E7CDF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D19BCF1-192A-42FE-A6F9-600099E7CDF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D19BCF1-192A-42FE-A6F9-600099E7CDF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B9AEBFD-22E3-4E7D-BC36-A07AB9AF7A6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B9AEBFD-22E3-4E7D-BC36-A07AB9AF7A6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B9AEBFD-22E3-4E7D-BC36-A07AB9AF7A6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B9AEBFD-22E3-4E7D-BC36-A07AB9AF7A6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
