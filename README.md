@@ -2,6 +2,9 @@
 
 Kittitas is a dotnet global tool that hosts the [Roslyn](https://github.com/dotnet/roslyn) and [MSBuild](http://github.com/dotnet/msbuild) APIs in a single process, making it easier to debug components that run in the roslyn compiler pipeline, such as Analyzers and Source Generators.
 
+![Nuget](https://img.shields.io/nuget/v/Kittitas)
+![GitHub](https://img.shields.io/github/license/chsienki/kittitas)
+
 ## Installation
 
 Kittitas is distributed as a dotnet global tool. Simply run the following command to install:
