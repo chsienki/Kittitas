@@ -1,0 +1,15 @@
+﻿<Project>
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
+    <NoWarn>NU5128</NoWarn>
+    
+    <Authors>Chris Sienkiewicz</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>kittitas roslyn analyzer sourcegenerator generator</PackageTags>
+    
+    <VersionPrefix>0.0.2</VersionPrefix>
+    <VersionSuffix>alpha</VersionSuffix>
+    
+  </PropertyGroup>
+</Project>

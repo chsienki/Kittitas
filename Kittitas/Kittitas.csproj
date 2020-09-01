@@ -2,13 +2,9 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
-
+    
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>dotnet-kittitas</ToolCommandName>
-    <VersionPrefix>0.0.1</VersionPrefix>
-    <VersionSuffix>alpha</VersionSuffix>
-    <Authors>Chris Sienkiewicz</Authors>
     <Description>An In-Memory version of the Roslyn compiler that can be used to debug components in the Roslyn pipeline</Description>
   </PropertyGroup>
 
