@@ -1,0 +1,5 @@
+﻿<Project Sdk="Kittitas.SDK/0.0.3-alpha">
+  <ItemGroup>
+    <ProjectReference Include="..\UsingGenerator\UsingGenerator.csproj" />
+  </ItemGroup>
+</Project>
