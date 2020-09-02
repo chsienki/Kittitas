@@ -34,17 +34,17 @@
     <PropertyGroup>
       <ProjectFileToDebug>@(ProjectReference->'%(FullPath)'->Replace('\', '\\'))</ProjectFileToDebug>
       <LaunchSettingsFile>
-        {
-        "profiles": {
+{
+    "profiles": {
         "DebugRolsynComponent": {
-        "commandName": "Executable",
-        "executablePath": "dotnet-kittitas",
-        "commandLineArgs": "$(ProjectFileToDebug)"
+            "commandName": "Executable",
+            "executablePath": "dotnet-kittitas",
+            "commandLineArgs": "$(ProjectFileToDebug)"
         }
-        }
-        }
+    }
+}
       </LaunchSettingsFile>
     </PropertyGroup>
-    <WriteLinesToFile Condition="'($_CanRunGeneration)' == 'true'" File="@(LaunchSettingsJsonFile)" Lines="$(LaunchSettingsFile)" Overwrite="true" />
+    <WriteLinesToFile Condition="'$(_CanRunGeneration)' == 'true'" File="@(LaunchSettingsJsonFile)" Lines="$(LaunchSettingsFile)" Overwrite="true" />
   </Target>
 </Project>
