@@ -1,19 +1,21 @@
 <Project>
-  <Import Project="Sdk.props" Sdk="Microsoft.Build.NoTargets" Version="2.0.1" />
-  
-  <PropertyGroup>
-    <!-- Default to netcore -->
-    <TargetFramework>net5.0</TargetFramework>
+	<Import Project="Sdk.props" Sdk="Microsoft.Build.NoTargets" Version="2.0.1" />
 
-    <!-- Dont include any default items -->
-    <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
-    <EnableDefaultItems>false</EnableDefaultItems>
-  
-  </PropertyGroup>
+	<PropertyGroup>
+		<!-- Default to netcore -->
+		<TargetFramework>net5.0</TargetFramework>
 
-  <ItemGroup>
-    <!-- Default place to write the launch settings file -->
-    <LaunchSettingsJsonFile Include="Properties\launchSettings.json" />
-  </ItemGroup>
-  
+		<!-- Dont include any default items -->
+		<EnableDefaultNoneItems>false</EnableDefaultNoneItems>
+		<EnableDefaultItems>false</EnableDefaultItems>
+
+		<!-- Allow the user to choose the kittias exe -->
+		<KittitasExeLocation>dotnet-kittitas</KittitasExeLocation>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- Default place to write the launch settings file -->
+		<LaunchSettingsJsonFile Include="Properties\launchSettings.json" />
+	</ItemGroup>
+
 </Project>

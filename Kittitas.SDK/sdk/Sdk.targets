@@ -38,7 +38,7 @@
     "profiles": {
         "DebugRolsynComponent": {
             "commandName": "Executable",
-            "executablePath": "dotnet-kittitas",
+            "executablePath": "$(KittitasExeLocation)",
             "commandLineArgs": "$(ProjectFileToDebug)"
         }
     }
