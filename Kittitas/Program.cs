@@ -7,6 +7,8 @@ using System.CommandLine.Parsing;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Loader;
 using System.Threading.Tasks;
 #nullable enable
 
@@ -70,8 +72,30 @@ namespace InProcBuild
             // load MSBuild from the default location
             MSBuildLocator.RegisterDefaults();
 
+            // Resolve other non-msbuild assemblies too
+            EnsureOtherAssembliesLoad();
+
             // do the actual compilation
             await Compile(projectFile.FullName);
+        }
+
+        private static void EnsureOtherAssembliesLoad()
+        {
+            // force load msbuild and get its location
+            using var workspace = MSBuildWorkspace.Create();
+            var msbuild = AssemblyLoadContext.Default.Assemblies.Single(a => a.GetName().Name == "Microsoft.Build");
+            var msBuildLocation = Path.GetDirectoryName(msbuild.Location) ?? string.Empty;
+
+            // add a loader that will try and find the assembly in the same location if we didn't find it
+            AssemblyLoadContext.Default.Resolving += (AssemblyLoadContext arg1, System.Reflection.AssemblyName arg2) =>
+            {
+                var attemptedLocation = Path.Combine(msBuildLocation, arg2.Name + ".dll");
+                if (File.Exists(attemptedLocation))
+                {
+                    return Assembly.LoadFrom(attemptedLocation);
+                }
+                return null;
+            };
         }
 
         private static void PreLoadAssemblies()
@@ -96,8 +120,18 @@ namespace InProcBuild
         {
             using var workspace = MSBuildWorkspace.Create();
             var project = await workspace.OpenProjectAsync(projectFile);
-            var comp = await project.GetCompilationAsync();
+            if (workspace.Diagnostics.Count > 0)
+            {
+                Console.WriteLine("Kittitas failed to load the project.");
+                Console.WriteLine("This might be a sign that Kittitas is using a different version of MSBuild than it was built for.");
+                Console.WriteLine();
+                Console.WriteLine("The first error was:");
+                Console.WriteLine(workspace.Diagnostics.First().ToString());
+                Console.ReadKey();
+                return;
+            }
 
+            var comp = await project.GetCompilationAsync();
             var diagnostics = comp!.GetDiagnostics();
             var errors = diagnostics.Where(d => d.Severity == Microsoft.CodeAnalysis.DiagnosticSeverity.Error).ToList();
             

@@ -10,11 +10,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Build.Locator" Version="1.2.6" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.8.0-3.final" />
-		<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="3.8.0-3.final"  />
-		<PackageReference Include="NuGet.ProjectModel" Version="5.8.0-preview.3.6823"  />
-		<PackageReference Include="NuGet.Frameworks" Version="5.8.0-preview.3.6823" />
-		<PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20371.2"/>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.8.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="3.8.0" />
+		<PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20371.2" />
 	</ItemGroup>
 
 </Project>
