@@ -53,7 +53,7 @@ To use the SDK, create an empty `.csproj` alongside the project you want to run 
 ```xml
 <Project Sdk="Kittitas.SDK/0.0.4-alpha">
   <ItemGroup>
-    <ProjectReference Include="YourApp.csproj" />
+    <LaunchProject Include="YourApp.csproj" />
   </ItemGroup>
 </Project>
 ```

@@ -12,9 +12,9 @@
   <Target Name="WriteLaunchSettingsFile">
 
     <!-- Error if not exactly one project -->
-    <Error Condition="'@(ProjectReference-&gt;Count())' != '1'" Text="Add a single project reference to this project, which is what will be debugged whilst being built." />
+	<Error Condition="'@(LaunchProject-&gt;Count())' != '1'" Text="Add a single item called LaunchProject, which lists the project to debug whilst being compiled." />
 
-    <!-- Don't overwrite an existing launch settings if we didn't create it -->
+	<!-- Don't overwrite an existing launch settings if we didn't create it -->
     <ReadLinesFromFile File="@(LaunchSettingsJsonFile)" >
       <Output TaskParameter="Lines" ItemName="_ExistingLaunchSettingsValue"/>
     </ReadLinesFromFile>
@@ -32,7 +32,7 @@
 
     <!-- Write the launch settings file -->
     <PropertyGroup>
-      <ProjectFileToDebug>@(ProjectReference->'%(FullPath)'->Replace('\', '\\'))</ProjectFileToDebug>
+      <ProjectFileToDebug>@(LaunchProject->'%(FullPath)'->Replace('\', '\\'))</ProjectFileToDebug>
       <LaunchSettingsFile>
 {
     "profiles": {
