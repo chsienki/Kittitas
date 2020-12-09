@@ -20,7 +20,7 @@
     </ReadLinesFromFile>
 
     <CreateProperty Value="true"
-                    Condition="'%(_ExistingLaunchSettingsValue.Identity)' == 'kittitas'">
+                    Condition="'%(_ExistingLaunchSettingsValue.Identity)' == '&quot;DebugRolsynComponent&quot;: {'">
       <Output TaskParameter="Value" PropertyName="_IsKittitasLaunchFile" />
     </CreateProperty>
 
