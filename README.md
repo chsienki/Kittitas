@@ -10,7 +10,7 @@ Kittitas is a dotnet global tool that hosts the [Roslyn](https://github.com/dotn
 Kittitas is distributed as a dotnet global tool. Simply run the following command to install:
 
 ```bat
-dotnet tool install --global kittitas --version 0.0.4-alpha
+dotnet tool install --global kittitas --version 0.0.5-alpha
 ```
 
 ## Usage
@@ -51,7 +51,7 @@ Kittitas include an [MSBuild SDK](https://docs.microsoft.com/en-us/visualstudio/
 To use the SDK, create an empty `.csproj` alongside the project you want to run Kittitas on. Add the following contents into the newly created project file:
 
 ```xml
-<Project Sdk="Kittitas.SDK/0.0.4-alpha">
+<Project Sdk="Kittitas.SDK/0.0.5-alpha">
   <ItemGroup>
     <LaunchProject Include="YourApp.csproj" />
   </ItemGroup>
