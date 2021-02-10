@@ -1,4 +1,5 @@
 ﻿using Microsoft.Build.Locator;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using System;
 using System.CommandLine;
@@ -21,20 +22,21 @@ namespace InProcBuild
         {
             using var workspace = MSBuildWorkspace.Create();
             var project = await workspace.OpenProjectAsync(projectFile);
-            if (workspace.Diagnostics.Count > 0)
+            var workspaceFailures = workspace.Diagnostics.Where(d => d.Kind == WorkspaceDiagnosticKind.Failure).ToList();
+            if (workspaceFailures.Any())
             {
                 Console.WriteLine("Kittitas failed to load the project.");
                 Console.WriteLine("This might be a sign that Kittitas is using a different version of MSBuild than it was built for.");
                 Console.WriteLine();
                 Console.WriteLine("The first error was:");
-                Console.WriteLine(workspace.Diagnostics.First().ToString());
+                Console.WriteLine(workspaceFailures.First().ToString());
                 Console.ReadKey();
                 return;
             }
 
             var comp = await project.GetCompilationAsync();
             var diagnostics = comp!.GetDiagnostics();
-            var errors = diagnostics.Where(d => d.Severity == Microsoft.CodeAnalysis.DiagnosticSeverity.Error).ToList();
+            var errors = diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
 
             if (errors.Count == 0)
             {
@@ -54,7 +56,7 @@ namespace InProcBuild
             var msBuildLocation = Path.GetDirectoryName(msbuild.Location) ?? string.Empty;
 
             // add a loader that will try and find the assembly in the same location if we didn't find it
-            AssemblyLoadContext.Default.Resolving += (AssemblyLoadContext arg1, System.Reflection.AssemblyName arg2) =>
+            AssemblyLoadContext.Default.Resolving += (AssemblyLoadContext arg1, AssemblyName arg2) =>
             {
                 var attemptedLocation = Path.Combine(msBuildLocation, arg2.Name + ".dll");
                 if (File.Exists(attemptedLocation))
