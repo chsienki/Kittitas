@@ -1,4 +1,5 @@
 ﻿using Microsoft.Build.Locator;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using System;
 using System.CommandLine;
@@ -10,13 +11,63 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading.Tasks;
+
 #nullable enable
 
 namespace InProcBuild
 {
-    class Program
+    internal class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Compile(string projectFile)
+        {
+            using var workspace = MSBuildWorkspace.Create();
+            var project = await workspace.OpenProjectAsync(projectFile);
+            var workspaceFailures = workspace.Diagnostics.Where(d => d.Kind == WorkspaceDiagnosticKind.Failure).ToList();
+            if (workspaceFailures.Any())
+            {
+                Console.WriteLine("Kittitas failed to load the project.");
+                Console.WriteLine("This might be a sign that Kittitas is using a different version of MSBuild than it was built for.");
+                Console.WriteLine();
+                Console.WriteLine("The first error was:");
+                Console.WriteLine(workspaceFailures.First().ToString());
+                Console.ReadKey();
+                return;
+            }
+
+            var comp = await project.GetCompilationAsync();
+            var diagnostics = comp!.GetDiagnostics();
+            var errors = diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
+
+            if (errors.Count == 0)
+            {
+                Console.WriteLine("In memory compilation succeeded.");
+            }
+            else
+            {
+                Console.WriteLine("In memory compilation failed with errors.");
+            }
+        }
+
+        private static void EnsureOtherAssembliesLoad()
+        {
+            // force load msbuild and get its location
+            using var workspace = MSBuildWorkspace.Create();
+            var msbuild = AssemblyLoadContext.Default.Assemblies.Single(a => a.GetName().Name == "Microsoft.Build");
+            var msBuildLocation = Path.GetDirectoryName(msbuild.Location) ?? string.Empty;
+
+            // add a loader that will try and find the assembly in the same location if we didn't find it
+            AssemblyLoadContext.Default.Resolving += (AssemblyLoadContext arg1, AssemblyName arg2) =>
+            {
+                var attemptedLocation = Path.Combine(msBuildLocation, arg2.Name + ".dll");
+                if (File.Exists(attemptedLocation))
+                {
+                    return Assembly.LoadFrom(attemptedLocation);
+                }
+                return null;
+            };
+        }
+
+        private static async Task Main(string[] args)
         {
             RootCommand rootCommand = new RootCommand("An In-Memory version of the Roslyn compiler that can be used to debug components in the Roslyn pipeline")
             {
@@ -50,7 +101,25 @@ namespace InProcBuild
             return null!; // Return value isn't used when error message is set
         }
 
-        static async Task Run(bool wait, bool attach, FileInfo projectFile)
+        private static void PreLoadAssemblies()
+        {
+            //TODO: figure this out at some point
+            //var path = @"C:\projects\roslyn\artifacts\bin\csc\Debug\netcoreapp3.1";
+
+            //foreach (var f in Directory.GetFiles(path, "*.dll"))
+            //{
+            //    try
+            //    {
+            //        AssemblyLoadContext.Default.LoadFromAssemblyPath(f);
+            //    }
+            //    catch(Exception e)
+            //    {
+            //        Console.WriteLine(e.Message);
+            //    }
+            //}
+        }
+
+        private static async Task Run(bool wait, bool attach, FileInfo projectFile)
         {
             if (attach)
             {
@@ -77,72 +146,6 @@ namespace InProcBuild
 
             // do the actual compilation
             await Compile(projectFile.FullName);
-        }
-
-        private static void EnsureOtherAssembliesLoad()
-        {
-            // force load msbuild and get its location
-            using var workspace = MSBuildWorkspace.Create();
-            var msbuild = AssemblyLoadContext.Default.Assemblies.Single(a => a.GetName().Name == "Microsoft.Build");
-            var msBuildLocation = Path.GetDirectoryName(msbuild.Location) ?? string.Empty;
-
-            // add a loader that will try and find the assembly in the same location if we didn't find it
-            AssemblyLoadContext.Default.Resolving += (AssemblyLoadContext arg1, System.Reflection.AssemblyName arg2) =>
-            {
-                var attemptedLocation = Path.Combine(msBuildLocation, arg2.Name + ".dll");
-                if (File.Exists(attemptedLocation))
-                {
-                    return Assembly.LoadFrom(attemptedLocation);
-                }
-                return null;
-            };
-        }
-
-        private static void PreLoadAssemblies()
-        {
-            //TODO: figure this out at some point
-            //var path = @"C:\projects\roslyn\artifacts\bin\csc\Debug\netcoreapp3.1";
-
-            //foreach (var f in Directory.GetFiles(path, "*.dll"))
-            //{
-            //    try
-            //    {
-            //        AssemblyLoadContext.Default.LoadFromAssemblyPath(f);
-            //    }
-            //    catch(Exception e)
-            //    {
-            //        Console.WriteLine(e.Message);
-            //    }
-            //}
-        }
-
-        static async Task Compile(string projectFile)
-        {
-            using var workspace = MSBuildWorkspace.Create();
-            var project = await workspace.OpenProjectAsync(projectFile);
-            if (workspace.Diagnostics.Count > 0)
-            {
-                Console.WriteLine("Kittitas failed to load the project.");
-                Console.WriteLine("This might be a sign that Kittitas is using a different version of MSBuild than it was built for.");
-                Console.WriteLine();
-                Console.WriteLine("The first error was:");
-                Console.WriteLine(workspace.Diagnostics.First().ToString());
-                Console.ReadKey();
-                return;
-            }
-
-            var comp = await project.GetCompilationAsync();
-            var diagnostics = comp!.GetDiagnostics();
-            var errors = diagnostics.Where(d => d.Severity == Microsoft.CodeAnalysis.DiagnosticSeverity.Error).ToList();
-            
-            if (errors.Count == 0)
-            {
-                Console.WriteLine("In memory compilation succeeded.");
-            }
-            else
-            {
-                Console.WriteLine("In memory compilation failed with errors.");
-            }
         }
     }
 }
